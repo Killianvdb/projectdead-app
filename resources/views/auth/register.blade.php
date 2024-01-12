@@ -54,6 +54,7 @@
             <x-primary-button class="ms-4">
                 {{ __('Register') }}
             </x-primary-button>
+            <a href="{{ route('welcome') }}" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 transition duration-150 ease-in-out">Welcome</a>
         </div>
     </form>
 </x-guest-layout>

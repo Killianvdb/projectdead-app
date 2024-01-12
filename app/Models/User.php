@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'birthday',
+        'is_admin',
         'password',
         'avatar',
     ];
@@ -45,4 +46,14 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
     protected $dates = ['birthday'];
+
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
+
+    public static function find($id)
+    {
+        return User::where('id', $id)->first();
+    }
 }
