@@ -23,7 +23,9 @@
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
-        
+        <label for="about-me">About Me:</label>
+        <input type="text" id="about-me" name="about-me" cols="50">{{ $user->about_me }}</input>
+        <label for="birthday">Birthday:</label>
 
         <div>
             <x-input-label for="email" :value="__('Email')" />

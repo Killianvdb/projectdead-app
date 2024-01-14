@@ -45,6 +45,14 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <!-- About Me -->
+        <div class="mt-4">
+            <x-input-label for="about_me" :value="__('About Me')" />
+            <x-text-input id="about_me" class="block mt-1 w-full" type="text" name="about_me" :value="old('about_me')" required autofocus autocomplete="about_me" />
+            <x-input-error :messages="$errors->get('about_me')" class="mt-2" />
+        </div>
+        
+
         <!-- Register Button -->
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
