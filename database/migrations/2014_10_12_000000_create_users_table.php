@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->date('birthday')->nullable();
+            $table->date('birthday')->nullable()->format('d-m-Y');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('is_admin')->default('USR');
+            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
             $table->string('avatar')->nullable();
-            
+            $table->string('about_me')->nullable();
         });
     }
 

@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,10 +30,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/my-account', [Usercontroller::class, 'index'])->name('user.index');
+    Route::get('/user/{id}', [Usercontroller::class, 'show'])->name('user.show');
+    Route::get('/user/{id}/promote', [Usercontroller::class, 'promoteToAdmin'])->name('user.promote');
+    Route::get('/user/{id}/demote', [Usercontroller::class, 'demoteFromAdmin'])->name('user.demote');
+
 });
 Route::middleware('auth','auth.admin')->group(function () {
-    Route::get('/admin', [Admincontroller::class, 'index'])->name('admin.index');
+  
+Route::get('profile/admin', [AdminController::class, 'index'])->name('profile.admin');
+    
 });
+
 
 require __DIR__.'/auth.php';
