@@ -23,46 +23,45 @@
                 <ul class="md:flex md:items-center md:static absolute bg-red w-full left-0 md:py-0 py-4 md:pl-0 pl-7 top-[60px] hidden"
                     style="background-color: red;">
                     <li class="mx-4 my-0 md:my-0 bg-red">
-                        <a href="" class="text x1 text-teal-500" style="background-color: red;">HOME</a>
-                    </li>
-                    <li class="mx-4 my-0 md:my-0 bg-red">
-                        <a href="" class="text x1 hover:text-teal-500 duration-500"
+                        <a href="{{route('about')}}" class="text x1 hover:text-teal-500 duration-500"
                             style="background-color: red;">OVER ONS</a>
+                           
                     </li>
-                    <li class="mx-4 my-0 md:my-0 bg-red">
+                    <li class="mx-4 my-0 md:my-0 bg-red">   
                         <a href="" class="text x1 hover:text-teal-500 duration-500"
                             style="background-color: red;">CONTACT</a>
                     </li>
-                    <p class="hidden md:inline">|</p>
-                    <li class="mx-4 my-0 md:my-0 bg-red">
-                        <a href="" class="text x1 hover:text-teal-500 duration-500"
-                            style="background-color: red;">MyADMIN</a>
-                    </li>
-                  
                 </ul>
                 <!--Login list icon-->
                 <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
             @if (Route::has('login'))
                 <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
                     @auth
-                        @if(auth()->user()->id_admin == 'ADM')
+                        @if(auth()->user()->is_admin)
                             <li>
-                                <a href="{{ route('admin.panel') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Admin Panel</a>
-                            </li>
-                        @elseif(auth()->user()->id_admin == 'USR')
+                                <a href="{{route('profile.admin') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">My Admin |</a>
+                                <a href="{{ url('/dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard |</a>
+                         
+                            <a href="{{ route('logout') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form> 
+                              </li>
+                        @elseif(auth()->user()->is_admin == false)
                             <li>
-                                <a href="{{ url('/myaccount') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">User</a>
-                            </li>
+                            <a href="{{ url('/dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">user |</a>
+                            
+                            <a href="{{ route('logout') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </li>
                         @endif
-                        <a href="{{ url('/dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard</a>
-
-                        <a href="{{ route('logout') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
+                       
                     @else
-                        <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a>
+                        <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in |</a>
 
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>

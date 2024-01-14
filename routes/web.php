@@ -41,5 +41,8 @@ Route::get('profile/admin', [AdminController::class, 'index'])->name('profile.ad
     
 });
 
+Route::get('/about', function () {
+    return view('Profile/about');
+})->name('about');
 
 require __DIR__.'/auth.php';
