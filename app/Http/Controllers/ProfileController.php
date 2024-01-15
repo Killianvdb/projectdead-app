@@ -7,7 +7,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -16,9 +18,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        // fetch the data of current user
+        $user = $request->user();
+
+        return view('profile.edit', compact('user'));
     }
 
     /**
@@ -26,43 +29,81 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        $user = $request->user();
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $user = Auth::user();
         $request->validate([
-            'current_password' => [
-                'required',
-                function ($attribute, $value, $fail) use ($user) {
-                    if (!Hash::check($value, $user->password)) {
-                        $fail('The current password is incorrect.');
-                    }
-                },
-            ],
-            'new_password' => 'required|string|min:8|confirmed',
+            'name' => 'required|string',
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)], //make sure we don't have double emails in db
+            'birthday' => 'date',
+            'short_bio' => 'string',
+            'avatar' => 'image|mimes:jpeg,png,jpg',
         ]);
 
-        $user->password = bcrypt($request->input('new_password'));
+
+
+        $user->fill([
+            'username' => $request->input('name'),
+            'email' => $request->input('email'),
+            'birthday' => $request->input('birthday'),
+            'short_bio' => $request->input('short_bio'),
+
+
+        ]);
+
+
+        if ($request->hasFile('avatar')) {
+
+
+            // Get the original file name
+            $originalFileName = $request->file('avatar')->getClientOriginalName();
+
+            // Generate a unique file name
+            $tempFileName = pathinfo($originalFileName, PATHINFO_FILENAME) . '_' . time() . '.' . $request->file('avatar')->getClientOriginalExtension();
+
+            //replace spaces with an underscore
+            $avatarFileName = str_replace(' ', '_', $tempFileName);
+
+            // Store the file on the webserver with a custom name
+            $request->file('avatar')->storeAs('avatars', $avatarFileName, 'public');
+
+
+
+            // Save the file path in the database
+            $user->fill([
+                'avatar' => 'storage/' . 'avatars/' . $avatarFileName
+            ]);
+        }
+
+
+
+
+
         $user->save();
 
-        return redirect()->route('profile.index')->with('success', 'Password updated successfully!');
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
      * Delete the user's account.
      */
-    public function destroy()
+    public function destroy(Request $request): RedirectResponse
     {
-        $user = Auth::user();
+        $request->validateWithBag('userDeletion', [
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $user = $request->user();
+
+        Auth::logout();
+
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
     }
+
+
 }

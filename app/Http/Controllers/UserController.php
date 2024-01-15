@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+    public function index()
+    {
+        $users  = User::all();
+        return view('profile.user', ['users' => $users]);
+    }
+
     public function show($id)
 {
     $user = User::find($id);
@@ -25,29 +32,14 @@ class UserController extends Controller
 }
 
 
-    public function promoteToAdmin($id)
-    {
-        // controleren als de huidige gebruiker een admin is
-        if (auth()->user()->is_admin) {
-            return redirect()->back()->with('error', 'You do not have the necessary permissions.');
-        }
+public function promoteUser(User $user)
+{
 
-        $user = User::find($id);
+    $user->update(['isAdmin' => 1]);
 
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
+    return redirect()->back()->with('success', 'User promoted to admin successfully');
 
-        // geen user promoveren die al admin is
-        if (!$user->is_admin) {
-            $user->is_admin = true;
-            $user->save();
-
-            return redirect()->back()->with('success', 'User promoted to admin successfully!');
-        }
-
-        return redirect()->back()->with('error', 'User is already an admin.');
-    }
+}
 
     public function demoteFromAdmin($id)
     {
@@ -72,4 +64,6 @@ class UserController extends Controller
 
         return redirect()->back()->with('error', 'User is not an admin.');
     }
+
+   
 }
