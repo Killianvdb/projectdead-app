@@ -27,10 +27,21 @@
                             style="background-color: red;">OVER ONS</a>
                            
                     </li>
-                    <li class="mx-4 my-0 md:my-0 bg-red">   
-                        <a href="" class="text x1 hover:text-teal-500 duration-500"
+                    
+                    @auth
+                    @if (Route::has('login'))
+                    <li class="mx-4 my-0 md:my-0 bg-red">
+                        <a href="{{route('faqPage')}}" class="text x1 hover:text-teal-500 duration-500"
+                            style="background-color: red;">FAQ</a>
+                    </li>
+                    <li class="mx-4 my-0 md:my-0 bg-red">
+                        <a href="{{route('contact.page')}}" class="text x1 hover:text-teal-500 duration-500"
                             style="background-color: red;">CONTACT</a>
                     </li>
+                    @endif
+                    @endauth
+                  
+
                 </ul>
                 <!--Login list icon-->
                 <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
