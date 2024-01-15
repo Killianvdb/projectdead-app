@@ -47,5 +47,77 @@
             </div>
         </form>
     </div>
+    <x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Dashboard') }}
+            </h2>
+
+            @if(auth()->check() && auth()->user()->isAdmin)
+            <a href="{{ route('posts.create') }}" class="text-blue-500">Create a post</a>
+            @endif
+        </div>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    <h2 class="text-lg font-medium text-gray-900">
+                        {{ __('Users') }}
+                    </h2>
+
+                    @foreach ($users as $user)
+                    <div class="bg-gray-100 p-4 mb-4">
+                        <h3 class="text-xl font-bold">{{ $user->name }}</h3>
+                        <p class="text-sm text-gray-500">{{ $user->email }}</p>
+                        <p class="text-sm text-gray-500">{{ $user->is_admin ? 'Admin' : 'User' }}</p>
+
+                        <!-- Admin-only buttons for promoting and demoting -->
+                        @if(auth()->check() && auth()->user()->isAdmin)
+                        <div class="mt-2">
+                            @if($user->is_admin)
+                            <a href="{{ route('users.demote', ['id' => $user->id]) }}" class="text-blue-500">Demote</a>
+                            @else
+                            <a href="{{ route('users.promote', ['id' => $user->id]) }}" class="text-blue-500">Promote</a>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
+                    @endforeach
+
+                <div class="max-w-xl mt-8">
+                    <h2 class="text-lg font-medium text-gray-900">
+                        {{ __('Posts') }}
+                    </h2>
+
+                    @foreach ($posts as $post)
+                    <div class="bg-gray-100 p-4 mb-4">
+                        <h3 class="text-xl font-bold">{{ $post->title }}</h3>
+                        <p class="text-sm text-gray-500">{{ $post->publishing_date }}</p>
+                        <img src="{{ asset($post->cover_image) }}" alt="{{ $post->title }}"
+                            class="post-cover-image mt-2">
+                        <div class="mt-2">{{ $post->content }}</div>
+
+                        <!-- Admin-only buttons for editing and deleting -->
+                        @if(auth()->check() && auth()->user()->isAdmin)
+                        <div class="mt-2">
+                            <a href="{{ route('posts.edit',['post' => $post->postId]) }}" class="text-blue-500">Edit</a>
+                            <form action="{{ route('posts.delete', ['post' => $post->postId]) }}" method="POST"
+                                class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500">Delete</button>
+                            </form>
+                        </div>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
 
 </section>

@@ -22,7 +22,7 @@ class AdminUserSeeder extends Seeder
                 'name' => 'admin',
                 'email' => 'admin@ehb.be',
                 'password' => Hash::make('Password!321'),
-                'is_admin' => true,
+                'is_admin' => 1,
             ]);
         }
     }
